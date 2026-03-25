@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spectro — A Swift ORM for PostgreSQL</title>
+  <meta name="description" content="Spectro is a Swift ORM for PostgreSQL. Property-wrapper schemas, composable value-type queries, and actor-based concurrency — Swift 6 from day one.">
+  <meta property="og:title" content="Spectro — A Swift ORM for PostgreSQL">
+  <meta property="og:description" content="Property-wrapper schemas, composable queries, and actor-based concurrency. Swift 6 strict concurrency from day one.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Film grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="logo-mark" aria-hidden="true"></div>
+        Spectro
+      </a>
+      <details class="nav-menu">
+        <summary class="nav-toggle" aria-label="Menu"><span></span><span></span></summary>
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#examples">Code</a></li>
+          <li><a href="#quickstart">Quick Start</a></li>
+          <li><a href="https://github.com/Maartz/Spectro" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </details>
+      <ul class="nav-links nav-desktop">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#examples">Code</a></li>
+        <li><a href="#quickstart">Quick Start</a></li>
+        <li><a href="https://github.com/Maartz/Spectro" target="_blank" rel="noopener" class="nav-gh">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <div class="hero-badge" data-animate>
+            <span class="badge-pulse"></span>
+            v1.0.0 &middot; Swift 6 &middot; PostgreSQL
+          </div>
+          <h1 data-animate data-delay="1">
+            The Swift ORM<br>
+            <span class="h1-spectral">PostgreSQL deserves.</span>
+          </h1>
+          <p class="hero-sub" data-animate data-delay="2">Define schemas with property wrappers. Compose queries as value types. Let actors handle concurrency. Spectro gives you the expressiveness of modern Swift &mdash; all the way to the database.</p>
+          <div class="hero-install" data-animate data-delay="3">
+            <div class="install-bar">
+              <span class="install-chevron">&rsaquo;</span>
+              <code>mint install Maartz/Spectro</code>
+              <button class="install-copy" aria-label="Copy" data-copy="mint install Maartz/Spectro">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="hero-actions" data-animate data-delay="4">
+            <a href="#quickstart" class="btn-primary">Get Started <span class="btn-arrow">&rarr;</span></a>
+            <a href="https://github.com/Maartz/Spectro" target="_blank" rel="noopener" class="btn-ghost">View Source</a>
+          </div>
+        </div>
+        <div class="hero-visual" data-animate data-delay="2">
+          <div class="code-editor">
+            <div class="editor-chrome">
+              <div class="editor-tab active">User.swift</div>
+              <div class="editor-tab">Post.swift</div>
+            </div>
+            <div class="editor-body">
+              <div class="editor-lines" aria-hidden="true">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+                <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+              </div>
+              <pre><code class="language-swift">@Schema("users")
+struct User {
+    @ID var id: UUID
+    @Column var name: String
+    @Column var email: String
+    @Column var bio: String?
+    @Timestamp var createdAt: Date
+    @HasMany var posts: [Post]
+    @HasOne var profile: Profile?
+}</code></pre>
+            </div>
+            <div class="editor-status">
+              <span class="status-label">Swift</span>
+              <span class="status-dot"></span>
+              <span class="status-text">@Schema macro &mdash; zero boilerplate</span>
+            </div>
+          </div>
+          <div class="hero-glow"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spectral divider -->
+    <div class="spectral-line"></div>
+
+    <!-- Ecosystem -->
+    <section class="ecosystem">
+      <div class="wrap">
+        <p class="eco-label">Powered by</p>
+        <div class="eco-row">
+          <span>SwiftNIO</span>
+          <span>PostgresKit</span>
+          <span>SQLKit</span>
+          <span>AsyncKit</span>
+          <span>SwiftSyntax</span>
+          <span>ArgumentParser</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+      <div class="wrap">
+        <div class="section-head" data-animate>
+          <span class="overline">Capabilities</span>
+          <h2>Everything you need.<br>Nothing you don't.</h2>
+        </div>
+        <div class="feature-grid">
+          <!-- Schema — large card -->
+          <div class="fcard fcard-lg" data-animate>
+            <div class="fcard-split">
+              <div class="fcard-info">
+                <div class="fcard-tag">Core</div>
+                <h3>Zero-Boilerplate Schemas</h3>
+                <p>The <code>@Schema</code> macro generates conformances, initializers, and row mapping at compile time. Write a struct. Get a model.</p>
+              </div>
+              <div class="fcard-code">
+                <pre><code class="language-swift">@Schema("posts")
+struct Post {
+    @ID var id: UUID
+    @Column var title: String
+    @ForeignKey var authorId: UUID
+    @Timestamp var createdAt: Date
+    @BelongsTo var author: User?
+}</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="fcard" data-animate data-delay="1">
+            <div class="fcard-tag">Queries</div>
+            <h3>Composable Query Builder</h3>
+            <p><code>Query&lt;T&gt;</code> is a value type. Every method returns a new query. Branch it, reuse it, compose freely.</p>
+          </div>
+
+          <!-- Row 2: 3 small cards -->
+          <div class="fcard" data-animate data-delay="1">
+            <div class="fcard-tag fcard-tag-warn">Safety</div>
+            <h3>No Silent N+1</h3>
+            <p>Unpreloaded relationships <code>assert</code> in debug builds. You'll know before production does.</p>
+          </div>
+
+          <div class="fcard" data-animate data-delay="2">
+            <div class="fcard-tag">Flexibility</div>
+            <h3>Generic Primary Keys</h3>
+            <p><code>@ID&lt;UUID&gt;</code>, <code>@ID&lt;Int&gt;</code>, or <code>@ID&lt;String&gt;</code>. Foreign keys match the referenced type automatically.</p>
+          </div>
+
+          <div class="fcard" data-animate data-delay="3">
+            <div class="fcard-tag fcard-tag-green">Concurrency</div>
+            <h3>Swift 6 From Day One</h3>
+            <p>All actors <code>Sendable</code>. Built on SwiftNIO + async/await. No <code>@unchecked</code> escape hatches.</p>
+          </div>
+
+          <!-- Row 3: 1 small + 1 wide -->
+          <div class="fcard" data-animate data-delay="1">
+            <div class="fcard-tag">Tooling</div>
+            <h3>One CLI</h3>
+            <p><code>spectro migrate up</code>. <code>spectro migrate status</code>. <code>spectro database create</code>. Installed via Mint.</p>
+          </div>
+
+          <!-- Migrations — large card -->
+          <div class="fcard fcard-lg" data-animate data-delay="2">
+            <div class="fcard-split">
+              <div class="fcard-info">
+                <div class="fcard-tag fcard-tag-teal">Schema</div>
+                <h3>Real SQL Migrations</h3>
+                <p>Plain <code>.sql</code> files with <code>-- migrate:up</code> / <code>-- migrate:down</code>. No ORM DDL to learn. Your whole team can review them.</p>
+              </div>
+              <div class="fcard-code">
+                <pre><code class="language-sql">-- migrate:up
+CREATE TABLE "users" (
+    "id"    UUID PRIMARY KEY
+            DEFAULT gen_random_uuid(),
+    "name"  TEXT NOT NULL,
+    "email" TEXT NOT NULL UNIQUE
+);
+
+-- migrate:down
+DROP TABLE "users";</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="spectral-line"></div>
+
+    <!-- Code Examples -->
+    <section class="examples" id="examples">
+      <div class="wrap">
+        <div class="section-head" data-animate>
+          <span class="overline">Code</span>
+          <h2>See it in action.</h2>
+        </div>
+        <div class="code-explorer" data-animate>
+          <div class="explorer-sidebar" role="tablist">
+            <button class="ex-tab active" role="tab" data-tab="queries" aria-selected="true">
+              <span class="ex-tab-icon">Q</span> Queries
+            </button>
+            <button class="ex-tab" role="tab" data-tab="transactions" aria-selected="false">
+              <span class="ex-tab-icon">T</span> Transactions
+            </button>
+            <button class="ex-tab" role="tab" data-tab="preloading" aria-selected="false">
+              <span class="ex-tab-icon">P</span> Preloading
+            </button>
+            <button class="ex-tab" role="tab" data-tab="aggregates" aria-selected="false">
+              <span class="ex-tab-icon">A</span> Aggregates
+            </button>
+            <button class="ex-tab" role="tab" data-tab="cli" aria-selected="false">
+              <span class="ex-tab-icon">$</span> CLI
+            </button>
+          </div>
+          <div class="explorer-main">
+            <div class="ex-panel active" data-panel="queries">
+              <div class="ex-desc">
+                <h3>Composable Queries</h3>
+                <p><code>Query&lt;T&gt;</code> is a value type. Build a base, branch into different results. The original is never mutated.</p>
+              </div>
+              <div class="code-editor code-editor-sm">
+                <div class="editor-chrome"><div class="editor-tab active">Queries.swift</div></div>
+                <div class="editor-body">
+                  <pre><code class="language-swift">let base = repo.query(User.self)
+    .where { $0.isActive == true }
+
+// Branch 1: recent active users
+let recent = try await base
+    .orderBy({ $0.createdAt }, .desc)
+    .limit(10)
+    .all()
+
+// Branch 2: count of same base query
+let total = try await base.count()
+
+// Expressive operators
+let results = try await repo.query(User.self)
+    .where { $0.email.iContains("@gmail.com") }
+    .where { $0.age.between(18, and: 65) }
+    .where { $0.role.in(["admin", "moderator"]) }
+    .orderBy({ $0.name }, .asc)
+    .all()</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="ex-panel" data-panel="transactions">
+              <div class="ex-desc">
+                <h3>Transactions</h3>
+                <p>Full CRUD inside transactions. Automatic rollback on error. The <code>repo</code> conforms to the same <code>Repo</code> protocol — works identically inside and outside.</p>
+              </div>
+              <div class="code-editor code-editor-sm">
+                <div class="editor-chrome"><div class="editor-tab active">Transactions.swift</div></div>
+                <div class="editor-body">
+                  <pre><code class="language-swift">let (user, profile) = try await spectro.transaction { repo in
+    let user = try await repo.insert(
+        User(name: "Alice", email: "alice@example.com")
+    )
+
+    let profile = try await repo.insert(
+        Profile(bio: "Hello!", userId: user.id)
+    )
+
+    // Full query builder inside transactions
+    let count = try await repo.query(User.self)
+        .where { $0.isActive == true }
+        .count()
+
+    return (user, profile)
+}
+// Automatic ROLLBACK on any thrown error</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="ex-panel" data-panel="preloading">
+              <div class="ex-desc">
+                <h3>Relationship Preloading</h3>
+                <p>Batch-load relationships in separate queries. Two queries total, not N+1. Composes with every other query method.</p>
+              </div>
+              <div class="code-editor code-editor-sm">
+                <div class="editor-chrome"><div class="editor-tab active">Preloading.swift</div></div>
+                <div class="editor-body">
+                  <pre><code class="language-swift">let users = try await repo.query(User.self)
+    .where { $0.isActive == true }
+    .preload(\.$posts)
+    .preload(\.$profile)
+    .preload(\.$tags)       // ManyToMany
+    .orderBy({ $0.name }, .asc)
+    .limit(50)
+    .all()
+
+// Access with confidence
+for user in users {
+    print(user.$posts.value)    // [Post] — loaded
+    print(user.$profile.value)  // Profile? — loaded
+}
+
+// Without preload? Debug assertion:
+// "HasMany&lt;Post&gt; accessed before loading.
+//  Use .preload(\.$posts) in your query."</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="ex-panel" data-panel="aggregates">
+              <div class="ex-desc">
+                <h3>Aggregates &amp; GROUP BY</h3>
+                <p>SUM, AVG, MIN, MAX, COUNT. Grouped aggregates with HAVING. Type-safe results.</p>
+              </div>
+              <div class="code-editor code-editor-sm">
+                <div class="editor-chrome"><div class="editor-tab active">Aggregates.swift</div></div>
+                <div class="editor-body">
+                  <pre><code class="language-swift">let revenue = try await repo.query(Order.self)
+    .where { $0.status == "completed" }
+    .sum { $0.amount }
+
+let avg = try await repo.query(Order.self).avg { $0.amount }
+
+// Grouped with HAVING
+let byRegion = try await repo.query(Order.self)
+    .groupBy({ $0.status }, { $0.region })
+    .having { $0.amount > 100 }
+    .groupedSum { $0.amount }
+
+// Field selection (no full model load)
+let names: [String] = try await repo.query(User.self)
+    .select { $0.name }
+    .all()</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="ex-panel" data-panel="cli">
+              <div class="ex-desc">
+                <h3>CLI</h3>
+                <p>One command to install. Manage migrations and databases from your terminal. Distributed via <a href="https://github.com/yonaskolb/Mint" target="_blank" rel="noopener">Mint</a>.</p>
+              </div>
+              <div class="code-editor code-editor-sm">
+                <div class="editor-chrome"><div class="editor-tab active">Terminal</div></div>
+                <div class="editor-body">
+                  <pre><code class="language-bash">$ spectro generate migration CreateUsers
+# → Sources/Migrations/20260324120000_CreateUsers.sql
+
+$ spectro migrate up
+# Applied 3 pending migrations
+
+$ spectro migrate status
+# ┌──────────────────────────────┬───────────┐
+# │ Migration                    │ Status    │
+# ├──────────────────────────────┼───────────┤
+# │ 20260324_CreateUsers         │ completed │
+# │ 20260324_CreatePosts         │ completed │
+# │ 20260324_AddUserIndex        │ completed │
+# └──────────────────────────────┴───────────┘
+
+$ spectro database create --database myapp_dev
+# Database "myapp_dev" created</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Start -->
+    <section class="quickstart" id="quickstart">
+      <div class="wrap">
+        <div class="section-head" data-animate>
+          <span class="overline">Get started</span>
+          <h2>Three steps. That's it.</h2>
+        </div>
+        <div class="steps">
+          <div class="step" data-animate>
+            <div class="step-num">01</div>
+            <div class="step-body">
+              <h3>Install</h3>
+              <div class="code-editor code-editor-sm">
+                <div class="editor-chrome"><div class="editor-tab active">Terminal</div></div>
+                <div class="editor-body"><pre><code class="language-bash">mint install Maartz/Spectro</code></pre></div>
+              </div>
+            </div>
+          </div>
+          <div class="step" data-animate data-delay="1">
+            <div class="step-num">02</div>
+            <div class="step-body">
+              <h3>Add dependency</h3>
+              <div class="code-editor code-editor-sm">
+                <div class="editor-chrome"><div class="editor-tab active">Package.swift</div></div>
+                <div class="editor-body">
+                  <pre><code class="language-swift">dependencies: [
+    .package(url: "https://github.com/Maartz/Spectro.git", from: "1.0.0")
+]
+
+// Add to your target:
+.product(name: "SpectroKit", package: "Spectro")</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="step" data-animate data-delay="2">
+            <div class="step-num">03</div>
+            <div class="step-body">
+              <h3>Define &amp; query</h3>
+              <div class="code-editor code-editor-sm">
+                <div class="editor-chrome"><div class="editor-tab active">App.swift</div></div>
+                <div class="editor-body">
+                  <pre><code class="language-swift">import Spectro
+
+@Schema("users")
+struct User {
+    @ID var id: UUID
+    @Column var name: String
+    @Column var email: String
+}
+
+let spectro = try Spectro.fromEnvironment()
+let repo = spectro.repository()
+
+let user = try await repo.insert(
+    User(name: "Alice", email: "alice@example.com")
+)
+
+let users = try await repo.query(User.self)
+    .where { $0.email.endsWith("@example.com") }
+    .all()</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="spectral-line"></div>
+
+    <!-- Architecture -->
+    <section class="architecture" id="architecture">
+      <div class="wrap">
+        <div class="section-head" data-animate>
+          <span class="overline">Architecture</span>
+          <h2>Clean layers. Clear boundaries.</h2>
+        </div>
+        <div class="arch-flow" data-animate>
+          <div class="arch-node arch-n1"><strong>Spectro</strong><span>Public facade</span></div>
+          <div class="arch-connector"></div>
+          <div class="arch-row">
+            <div class="arch-node arch-n2"><strong>GenericDatabaseRepo</strong><span>Repo &middot; Actor</span></div>
+            <div class="arch-node arch-n2"><strong>TransactionRepo</strong><span>Repo &middot; Pinned conn</span></div>
+          </div>
+          <div class="arch-connector"></div>
+          <div class="arch-node arch-n3"><strong>DatabaseConnection</strong><span>QueryExecutor &middot; Actor</span></div>
+          <div class="arch-connector"></div>
+          <div class="arch-node arch-n4"><strong>PostgreSQL</strong><span>postgres-kit + SwiftNIO</span></div>
+        </div>
+        <div class="arch-table" data-animate>
+          <table>
+            <thead><tr><th>Target</th><th>Product</th><th>Role</th></tr></thead>
+            <tbody>
+              <tr><td><code>SpectroCore</code></td><td><code>SpectroCore</code></td><td>Zero-dep shared types</td></tr>
+              <tr><td><code>SpectroMacros</code></td><td>Compiler plugin</td><td><code>@Schema</code> macro via SwiftSyntax</td></tr>
+              <tr><td><code>Spectro</code></td><td><code>SpectroKit</code></td><td>Core ORM library</td></tr>
+              <tr><td><code>SpectroCLI</code></td><td><code>spectro</code></td><td>CLI for migrations &amp; DB management</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-row">
+        <div class="footer-brand">
+          <span class="footer-logo">Spectro</span>
+          <span class="footer-sub">A Swift ORM for PostgreSQL</span>
+        </div>
+        <div class="footer-nav">
+          <a href="https://github.com/Maartz/Spectro" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/Maartz/Spectro/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+          <a href="#quickstart">Get Started</a>
+        </div>
+      </div>
+      <div class="footer-end">
+        <span>Built with Swift.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-swift.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
