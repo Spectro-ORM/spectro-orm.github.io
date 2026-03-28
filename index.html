@@ -210,6 +210,28 @@ DROP TABLE "users";</code></pre>
               </div>
             </div>
           </div>
+
+          <!-- Encodable Schemas — large card -->
+          <div class="fcard fcard-lg" data-animate>
+            <div class="fcard-split">
+              <div class="fcard-info">
+                <div class="fcard-tag fcard-tag-green">Encoding</div>
+                <h3>Encodable Schemas</h3>
+                <p>The <code>@Schema</code> macro auto-generates <code>Encodable</code> conformance. Pass models straight to <code>JSONEncoder</code> &mdash; no manual dictionary mapping. Snake_case keys by default, <code>@Column("custom")</code> overrides them, and unloaded relationships are omitted automatically.</p>
+              </div>
+              <div class="fcard-code">
+                <pre><code class="language-swift">// Before — manual dictionary mapping
+donuts.map { d in
+    ["id": "\(d.id)",
+     "name": d.name,
+     "price": "\(d.price)"]
+}
+
+// After — direct encoding
+try JSONEncoder().encode(donuts)</code></pre>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -236,6 +258,9 @@ DROP TABLE "users";</code></pre>
             </button>
             <button class="ex-tab" role="tab" data-tab="aggregates" aria-selected="false">
               <span class="ex-tab-icon">A</span> Aggregates
+            </button>
+            <button class="ex-tab" role="tab" data-tab="encoding" aria-selected="false">
+              <span class="ex-tab-icon">E</span> Encoding
             </button>
             <button class="ex-tab" role="tab" data-tab="cli" aria-selected="false">
               <span class="ex-tab-icon">$</span> CLI
@@ -356,6 +381,41 @@ let byRegion = try await repo.query(Order.self)
 let names: [String] = try await repo.query(User.self)
     .select { $0.name }
     .all()</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="ex-panel" data-panel="encoding">
+              <div class="ex-desc">
+                <h3>Encodable Schemas</h3>
+                <p><code>@Schema</code> auto-generates <code>Encodable</code> conformance. JSON keys are snake_case by default. <code>@Column("custom")</code> overrides the key. Unloaded relationships are omitted from output. Opt out with <code>@Schema("secrets", encodable: false)</code>.</p>
+              </div>
+              <div class="code-editor code-editor-sm">
+                <div class="editor-chrome"><div class="editor-tab active">Encoding.swift</div></div>
+                <div class="editor-body">
+                  <pre><code class="language-swift">@Schema("donuts")
+struct Donut {
+    @ID var id: UUID
+    @Column var name: String
+    @Column("display_price") var price: Decimal
+    @Timestamp var createdAt: Date
+    @BelongsTo var shop: Shop?
+}
+
+// Direct encoding — no manual mapping
+let donuts = try await repo.query(Donut.self).all()
+let json = try JSONEncoder().encode(donuts)
+// → [{"id":"...","name":"Glazed","display_price":"3.50",
+//     "created_at":"2026-03-28T..."}]
+//   ↑ shop key omitted — not preloaded
+
+// Preload to include relationships
+let withShop = try await repo.query(Donut.self)
+    .preload(\.$shop)
+    .all()
+let full = try JSONEncoder().encode(withShop)
+// → [{"id":"...","name":"Glazed",...,
+//     "shop":{"id":"...","name":"Sweet Spot"}}]</code></pre>
                 </div>
               </div>
             </div>
